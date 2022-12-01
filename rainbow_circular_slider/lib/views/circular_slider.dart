@@ -2,9 +2,35 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 import 'package:rainbow_circular_slider/views/utils.dart';
+import 'dart:io';
 
 double radius = 135;
 double strokeWidth = 15;
+
+void printIps() async {
+  var address = "";
+  for (var interface in await NetworkInterface.list()) {
+    // print('== Interface: ${interface.name} ==');
+    for (var addr in interface.addresses) {
+      address = addr.address;
+    }
+  }
+
+  var index = address.lastIndexOf('.');
+  address = address.substring(0, index + 1);
+  address += "255";
+  print(address);
+
+  RawDatagramSocket.bind(InternetAddress.anyIPv4, 4210)
+      .then((RawDatagramSocket socket) {
+    // print('Sending from ${socket.address.address}:${socket.port}');
+    // printIps();
+    socket.broadcastEnabled = true;
+    int port = 4210;
+    socket.send('Hello from UDP land!\n'.codeUnits,
+        InternetAddress('192.168.0.255'), port);
+  });
+}
 
 class CircularSlider extends StatefulWidget {
   final ValueChanged<double> onAngleChanged;
@@ -23,7 +49,7 @@ class _CircularSliderState extends State<CircularSlider> {
 
   double currentAngle = 0;
 
-  double startAngle = toRadian(90);
+  double startAngle = toRadian(0);
 
   double totalAngle = toRadian(360);
 
@@ -43,6 +69,19 @@ class _CircularSliderState extends State<CircularSlider> {
           painter: SliderPainter(
             startAngle: startAngle,
             currentAngle: currentAngle,
+          ),
+        ),
+        Center(
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              shape: BoxShape.circle,
+            ),
+            width: radius + strokeWidth,
+            height: radius + strokeWidth,
+            child: GestureDetector(
+              onTap: printIps,
+            ),
           ),
         ),
         Positioned(

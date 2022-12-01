@@ -68,11 +68,14 @@ class _HomeScreenState extends State<HomeScreen> {
                 SizedBox(
                   height: 340.0,
                   width: MediaQuery.of(context).size.width,
-                  child: CircularSlider(
-                    onAngleChanged: (angle) {
-                      volume = ((angle / (math.pi * 2)) * 100).toInt();
-                      setState(() {});
-                    },
+                  child: Transform.rotate(
+                    angle: math.pi / 2,
+                    child: CircularSlider(
+                      onAngleChanged: (angle) {
+                        volume = ((angle / (math.pi * 2)) * 100).toInt();
+                        setState(() {});
+                      },
+                    ),
                   ),
                 ),
                 const SizedBox(height: 20.0),

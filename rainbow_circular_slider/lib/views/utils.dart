@@ -2,17 +2,19 @@ import 'dart:math' as math;
 
 import 'package:flutter/material.dart';
 
-List<Color> colors = [
-  Colors.green,
-  Colors.blue,
-  Colors.indigo,
-  Colors.purple,
-  Colors.pink,
-  Colors.orange,
-  Colors.yellow,
-  Colors.greenAccent,
-  Colors.green,
-];
+// List<Color> colors = [
+//   Colors.green,
+//   Colors.blue,
+//   Colors.indigo,
+//   Colors.purple,
+//   Colors.pink,
+//   Colors.orange,
+//   Colors.yellow,
+//   Colors.greenAccent,
+//   Colors.green,
+// ];
+
+List<Color> colors = [Color(0xff0D1018), Color(0xFFFFFFFF)];
 
 const fullAngleInRadians = math.pi * 2;
 
