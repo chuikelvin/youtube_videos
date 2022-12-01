@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:rainbow_circular_slider/views/utils.dart';
 
 double radius = 135;
-double strokeWidth = 30;
+double strokeWidth = 15;
 
 class CircularSlider extends StatefulWidget {
   final ValueChanged<double> onAngleChanged;
@@ -30,7 +30,7 @@ class _CircularSliderState extends State<CircularSlider> {
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
-    Size canvasSize = Size(screenSize.width, screenSize.width - 35);
+    Size canvasSize = Size(screenSize.width, screenSize.width - 60);
     Offset center = canvasSize.center(Offset.zero);
     Offset knobPos = toPolar(center - Offset(strokeWidth, strokeWidth),
         currentAngle + startAngle, radius);
@@ -113,8 +113,8 @@ class _Knob extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 60,
-      width: 60,
+      height: 30,
+      width: 30,
       decoration: BoxDecoration(
           color: const Color(0xff0b1623),
           shape: BoxShape.circle,

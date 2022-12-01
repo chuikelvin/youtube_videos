@@ -62,43 +62,45 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
-          body: Column(
-            children: [
-              SizedBox(
-                height: 340.0,
-                width: MediaQuery.of(context).size.width,
-                child: CircularSlider(
-                  onAngleChanged: (angle) {
-                    volume = ((angle / (math.pi * 2)) * 100).toInt();
-                    setState(() {});
-                  },
+          body: SingleChildScrollView(
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 340.0,
+                  width: MediaQuery.of(context).size.width,
+                  child: CircularSlider(
+                    onAngleChanged: (angle) {
+                      volume = ((angle / (math.pi * 2)) * 100).toInt();
+                      setState(() {});
+                    },
+                  ),
                 ),
-              ),
-              const SizedBox(height: 20.0),
-              _VolumeRow(volume: volume),
-              const SizedBox(height: 20.0),
-              SizedBox(
-                height: 220.0,
-                child: Column(
-                  children: [
-                    Flexible(
-                      child: ListView.builder(
-                        padding: const EdgeInsets.only(left: 20.0),
-                        scrollDirection: Axis.horizontal,
-                        itemCount: cards.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          CardModel card = cards[index];
-                          return Padding(
-                            padding: const EdgeInsets.only(right: 15.0),
-                            child: _Card(cardModel: card),
-                          );
-                        },
+                const SizedBox(height: 20.0),
+                _VolumeRow(volume: volume),
+                const SizedBox(height: 20.0),
+                SizedBox(
+                  height: 220.0,
+                  child: Column(
+                    children: [
+                      Flexible(
+                        child: ListView.builder(
+                          padding: const EdgeInsets.only(left: 20.0),
+                          scrollDirection: Axis.horizontal,
+                          itemCount: cards.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            CardModel card = cards[index];
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 15.0),
+                              child: _Card(cardModel: card),
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ],
@@ -129,7 +131,7 @@ class _VolumeRow extends StatelessWidget {
           Text(
             '$volume',
             style: const TextStyle(
-              fontSize: 70.0,
+              fontSize: 65.0,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -165,7 +167,7 @@ class _Card extends StatelessWidget {
             boxShadow: cardModel.active
                 ? [
                     const BoxShadow(
-                      color: Color(0xff10017D),
+                      color: Color.fromARGB(255, 72, 72, 72),
                       offset: Offset(2.0, 2.0),
                     ),
                   ]
