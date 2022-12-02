@@ -35,9 +35,12 @@ void printIps() async {
 class CircularSlider extends StatefulWidget {
   final ValueChanged<double> onAngleChanged;
 
+  final double canvheight;
+
   const CircularSlider({
     Key? key,
     required this.onAngleChanged,
+    required this.canvheight,
   }) : super(key: key);
 
   @override
@@ -56,7 +59,7 @@ class _CircularSliderState extends State<CircularSlider> {
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
-    Size canvasSize = Size(screenSize.width, screenSize.width - 60);
+    Size canvasSize = Size(screenSize.width, 340);
     Offset center = canvasSize.center(Offset.zero);
     Offset knobPos = toPolar(center - Offset(strokeWidth, strokeWidth),
         currentAngle + startAngle, radius);
@@ -84,6 +87,24 @@ class _CircularSliderState extends State<CircularSlider> {
             ),
           ),
         ),
+        Positioned(
+            left: 180 - 40,
+            top: 170 - 40,
+            child: Container(
+              width: 80,
+              height: 80,
+              child: Text(
+                '$knobPos',
+                style: TextStyle(
+                  fontSize: 20.0,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+              decoration: BoxDecoration(
+                  color: Color.fromARGB(255, 64, 144, 90),
+                  shape: BoxShape.circle,
+                  border: Border.all(color: Colors.white, width: 3.0)),
+            )),
         Positioned(
           left: knobPos.dx,
           top: knobPos.dy,
@@ -152,12 +173,15 @@ class _Knob extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 30,
-      width: 30,
-      decoration: BoxDecoration(
-          color: const Color(0xff0b1623),
-          shape: BoxShape.circle,
-          border: Border.all(color: Colors.white, width: 3.0)),
-    );
+        height: 60,
+        width: 60,
+        child: Container(
+          height: 30,
+          width: 30,
+          decoration: BoxDecoration(
+              color: const Color(0xff0b1623),
+              shape: BoxShape.circle,
+              border: Border.all(color: Colors.white, width: 3.0)),
+        ));
   }
 }

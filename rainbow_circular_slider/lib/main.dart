@@ -24,8 +24,8 @@ void main() {
     printIps();
     socket.broadcastEnabled = true;
     int port = 4210;
-    socket.send('Hello from UDP land!\n'.codeUnits,
-        InternetAddress('192.168.0.255'), port);
+    // socket.send('Hello from UDP land!\n'.codeUnits,
+    //     InternetAddress('192.168.0.255'), port);
 
         socket.listen((RawSocketEvent e){
       Datagram? d = socket.receive();

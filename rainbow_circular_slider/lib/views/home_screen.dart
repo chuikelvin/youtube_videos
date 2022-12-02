@@ -62,48 +62,48 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
             ],
           ),
-          body: SingleChildScrollView(
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 340.0,
-                  width: MediaQuery.of(context).size.width,
-                  child: Transform.rotate(
-                    angle: math.pi / 2,
-                    child: CircularSlider(
-                      onAngleChanged: (angle) {
-                        volume = ((angle / (math.pi * 2)) * 100).toInt();
-                        setState(() {});
-                      },
-                    ),
+          body: Column(
+            children: [
+              SizedBox(
+                height: 340.0,
+                width: MediaQuery.of(context).size.width,
+                child: Transform.rotate(
+                  // angle: math.pi / 2,
+                  angle: 0,
+                  child: CircularSlider(
+                    canvheight: 340.0,
+                    onAngleChanged: (angle) {
+                      volume = ((angle / (math.pi * 2)) * 100).toInt();
+                      setState(() {});
+                    },
                   ),
                 ),
-                const SizedBox(height: 20.0),
-                _VolumeRow(volume: volume),
-                const SizedBox(height: 20.0),
-                SizedBox(
-                  height: 220.0,
-                  child: Column(
-                    children: [
-                      Flexible(
-                        child: ListView.builder(
-                          padding: const EdgeInsets.only(left: 20.0),
-                          scrollDirection: Axis.horizontal,
-                          itemCount: cards.length,
-                          itemBuilder: (BuildContext context, int index) {
-                            CardModel card = cards[index];
-                            return Padding(
-                              padding: const EdgeInsets.only(right: 15.0),
-                              child: _Card(cardModel: card),
-                            );
-                          },
-                        ),
+              ),
+              const SizedBox(height: 10.0),
+              _VolumeRow(volume: volume),
+              const SizedBox(height: 10.0),
+              SizedBox(
+                height: 195.0,
+                child: Column(
+                  children: [
+                    Flexible(
+                      child: ListView.builder(
+                        padding: const EdgeInsets.only(left: 20.0),
+                        scrollDirection: Axis.horizontal,
+                        itemCount: cards.length,
+                        itemBuilder: (BuildContext context, int index) {
+                          CardModel card = cards[index];
+                          return Padding(
+                            padding: const EdgeInsets.only(right: 15.0),
+                            child: _Card(cardModel: card),
+                          );
+                        },
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ],
@@ -134,7 +134,7 @@ class _VolumeRow extends StatelessWidget {
           Text(
             '$volume',
             style: const TextStyle(
-              fontSize: 65.0,
+              fontSize: 60.0,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -162,7 +162,7 @@ class _Card extends StatelessWidget {
     return Column(
       children: [
         Container(
-          height: 200.0,
+          height: 150.0,
           width: 150.0,
           decoration: BoxDecoration(
             color: bgDark,
@@ -182,7 +182,7 @@ class _Card extends StatelessWidget {
               Text(
                 cardModel.title,
                 style: TextStyle(
-                  fontSize: 20.0,
+                  fontSize: 16.0,
                   fontWeight: FontWeight.w500,
                   color: color,
                 ),
@@ -190,14 +190,14 @@ class _Card extends StatelessWidget {
               const SizedBox(height: 10.0),
               Icon(
                 cardModel.icon,
-                size: 60.0,
+                size: 40.0,
                 color: color,
               ),
               const SizedBox(height: 10.0),
               Text(
                 cardModel.active ? 'A C T I V E' : 'I N A C T I V E',
                 style: TextStyle(
-                  fontSize: 20.0,
+                  fontSize: 12.0,
                   fontWeight: FontWeight.w500,
                   color: color,
                 ),
