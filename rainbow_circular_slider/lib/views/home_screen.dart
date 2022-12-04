@@ -1,4 +1,7 @@
+import 'dart:async';
 import 'dart:math' as math;
+// import 'package:connectivity/connectivity.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -14,99 +17,196 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+
   int volume = 0;
   bool liked = false;
+  StreamSubscription? connection;
+  bool isoffline = false;
+  String connectionmode ="";
+  // late Connectivity internet_result;
+  @override
+  void initState() {
+    // checkConnectivity();
+    ConnectivityResult _connectionStatus = ConnectivityResult.none;
+    // var status = await Connectivity().checkConnectivity();
+
+    // print(status.toString());
+
+    // if (status = ConnectivityResult.bluetooth) {
+      
+    // }
+
+     connection = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+        // whenevery connection status is changed.
+        print("change");
+        if(result == ConnectivityResult.none){
+             //there is no any connection
+             setState(() {
+                 isoffline = true;
+                 connectionmode = "none";
+             });
+
+        }else if(result == ConnectivityResult.mobile){
+             //connection is mobile data network
+             setState(() {
+                isoffline = false;
+                connectionmode ="mobile";
+             });
+        }else if(result == ConnectivityResult.wifi){
+            //connection is from wifi
+            setState(() {
+               isoffline = false;
+               connectionmode ="wifi";
+            });
+        }else if(result == ConnectivityResult.ethernet){
+            //connection is from wired connection
+            setState(() {
+               isoffline = false;
+               connectionmode = "ethernet";
+            });
+        }else if(result == ConnectivityResult.bluetooth){
+            //connection is from bluetooth threatening
+            setState(() {
+               isoffline = false;
+               connectionmode ="bluetooth";
+            });
+        }
+    });
+    super.initState();
+  }
+  // void checkConnectivity() async {
+  //   internet_result = (await Connectivity().checkConnectivity()) as Connectivity;
+  //   // print(internet_result.toString());
+  // }
+    @override
+  void dispose() {
+    connection!.cancel();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Container(
-          decoration: const BoxDecoration(
-              gradient: LinearGradient(
-            colors: [bgLight, bgDark],
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-          )),
-        ),
-        Scaffold(
-          backgroundColor: Colors.transparent,
-          appBar: AppBar(
-            elevation: 0.0,
+    return WillPopScope(
+      onWillPop: () async {
+        return false;
+      },
+      child: Stack(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+                gradient: LinearGradient(
+              colors: isoffline? [bgRed, bgDark]:[bgLight, bgDark],
+              begin: Alignment.topCenter,
+              end: Alignment.bottomCenter,
+            )),
+          ),
+          Scaffold( 
             backgroundColor: Colors.transparent,
-            centerTitle: false,
-            title: Row(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Text(
-                  'H o m e p o d'.toUpperCase(),
-                ),
-                const SizedBox(width: 10.0),
-                Text(
-                  'M i n i'.toUpperCase(),
-                  style: const TextStyle(fontSize: 14.0),
+                // ignore: prefer_const_constructors
+                drawer: Drawer (
+                  backgroundColor:  Color.fromARGB(132, 0, 0, 0),
+                  width: 200,
+        // ignore: prefer_const_constructors
+        child: SafeArea(
+          child:
+          Column(
+            children: [
+              SizedBox(height: 10,),
+              Text ("This is a drawer"),
+            ],
+          ) 
+          ) ,
+    ),
+            appBar: AppBar(
+              automaticallyImplyLeading: false,
+              elevation: 0.0,
+              backgroundColor: Colors.transparent,
+              centerTitle: false,
+              title: Row(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Text(
+                    'H o m e p o d'.toUpperCase(),
+                  ),
+                  const SizedBox(width: 10.0),
+                  Text(
+                    'M i n i'.toUpperCase(),
+                    style: const TextStyle(fontSize: 14.0),
+                  ),
+                  Text(
+                    '$connectionmode'.toUpperCase(),
+                    style: const TextStyle(fontSize: 14.0),
+                  ),
+                ],
+              ),
+              actions: [
+                IconButton(
+                  onPressed: () {
+                    liked = !liked;
+                    setState(() {});
+                  },
+                  color: liked ? Colors.red : Colors.white,
+                  icon: Icon(
+                    liked ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
+                  ),
                 ),
               ],
             ),
-            actions: [
-              IconButton(
-                onPressed: () {
-                  liked = !liked;
-                  setState(() {});
-                },
-                color: liked ? Colors.red : Colors.white,
-                icon: Icon(
-                  liked ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
-                ),
-              ),
-            ],
-          ),
-          body: Column(
-            children: [
-              SizedBox(
-                height: 340.0,
-                width: MediaQuery.of(context).size.width,
-                child: Transform.rotate(
-                  // angle: math.pi / 2,
-                  angle: 0,
-                  child: CircularSlider(
-                    canvheight: 340.0,
-                    onAngleChanged: (angle) {
-                      volume = ((angle / (math.pi * 2)) * 100).toInt();
-                      setState(() {});
-                    },
+            body: 
+            Column(
+              children: [
+                SizedBox(
+                  height: 340.0,
+                  width: MediaQuery.of(context).size.width,
+                  child: Transform.rotate(
+                    // angle: math.pi / 2,
+                    angle: 0,
+                    child: CircularSlider(
+                      canvheight: 340.0,
+                      onAngleChanged: (angle) {
+                        volume = ((angle / (math.pi * 2)) * 100).toInt();
+                        setState(() {});
+                      },
+                    ),
                   ),
                 ),
-              ),
-              const SizedBox(height: 10.0),
-              _VolumeRow(volume: volume),
-              const SizedBox(height: 10.0),
-              SizedBox(
-                height: 195.0,
-                child: Column(
-                  children: [
-                    Flexible(
-                      child: ListView.builder(
-                        padding: const EdgeInsets.only(left: 20.0),
-                        scrollDirection: Axis.horizontal,
-                        itemCount: cards.length,
-                        itemBuilder: (BuildContext context, int index) {
-                          CardModel card = cards[index];
-                          return Padding(
-                            padding: const EdgeInsets.only(right: 15.0),
-                            child: _Card(cardModel: card),
-                          );
-                        },
+                const SizedBox(height: 10.0),
+                _VolumeRow(volume: volume),
+                const SizedBox(height: 10.0),
+                SizedBox(
+                  height: 195.0,
+                  child: Column(
+                    children: [
+                      Flexible(
+                        child: ListView.builder(
+                          padding: const EdgeInsets.only(left: 20.0),
+                          scrollDirection: Axis.horizontal,
+                          itemCount: cards.length,
+                          itemBuilder: (BuildContext context, int index) {
+                            CardModel card = cards[index];
+                            return Padding(
+                              padding: const EdgeInsets.only(right: 15.0),
+                              child: _Card(cardModel: card),
+                            );
+                          },
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
-        ),
-      ],
+              //           GestureDetector(
+              // child:Container(
+              //   height:MediaQuery.of(context).size.height,
+              //   color:Colors.red,
+              //   width:12,
+              // )
+              // )
+        ],
+      ),
     );
   }
 }

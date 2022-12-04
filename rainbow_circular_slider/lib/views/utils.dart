@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 //   Colors.green,
 // ];
 
-List<Color> colors = [Color(0xff0D1018), Color(0xFFFFFFFF)];
+List<Color> colors = [Color(0xFFFFFFFF),Color(0xff0D1018),Color(0xff0D1018),Color(0xff0D1018),Color(0xFFFFFFFF),Color(0xFFFFFFFF)];
 
 const fullAngleInRadians = math.pi * 2;
 
