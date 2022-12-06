@@ -9,6 +9,8 @@ import 'package:rainbow_circular_slider/card.dart';
 import 'package:rainbow_circular_slider/constants.dart';
 import 'package:rainbow_circular_slider/views/circular_slider.dart';
 
+import 'onboard.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -17,12 +19,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-
   int volume = 0;
   bool liked = false;
   StreamSubscription? connection;
   bool isoffline = false;
-  String connectionmode ="";
+  String connectionmode = "";
   // late Connectivity internet_result;
   @override
   void initState() {
@@ -33,52 +34,54 @@ class _HomeScreenState extends State<HomeScreen> {
     // print(status.toString());
 
     // if (status = ConnectivityResult.bluetooth) {
-      
+
     // }
 
-     connection = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
-        // whenevery connection status is changed.
-        print("change");
-        if(result == ConnectivityResult.none){
-             //there is no any connection
-             setState(() {
-                 isoffline = true;
-                 connectionmode = "none";
-             });
-
-        }else if(result == ConnectivityResult.mobile){
-             //connection is mobile data network
-             setState(() {
-                isoffline = false;
-                connectionmode ="mobile";
-             });
-        }else if(result == ConnectivityResult.wifi){
-            //connection is from wifi
-            setState(() {
-               isoffline = false;
-               connectionmode ="wifi";
-            });
-        }else if(result == ConnectivityResult.ethernet){
-            //connection is from wired connection
-            setState(() {
-               isoffline = false;
-               connectionmode = "ethernet";
-            });
-        }else if(result == ConnectivityResult.bluetooth){
-            //connection is from bluetooth threatening
-            setState(() {
-               isoffline = false;
-               connectionmode ="bluetooth";
-            });
-        }
+    connection = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
+      // whenevery connection status is changed.
+      print("change");
+      if (result == ConnectivityResult.none) {
+        //there is no any connection
+        setState(() {
+          isoffline = true;
+          connectionmode = "none";
+        });
+      } else if (result == ConnectivityResult.mobile) {
+        //connection is mobile data network
+        setState(() {
+          isoffline = false;
+          connectionmode = "mobile";
+        });
+      } else if (result == ConnectivityResult.wifi) {
+        //connection is from wifi
+        setState(() {
+          isoffline = false;
+          connectionmode = "wifi";
+        });
+      } else if (result == ConnectivityResult.ethernet) {
+        //connection is from wired connection
+        setState(() {
+          isoffline = false;
+          connectionmode = "ethernet";
+        });
+      } else if (result == ConnectivityResult.bluetooth) {
+        //connection is from bluetooth threatening
+        setState(() {
+          isoffline = false;
+          connectionmode = "bluetooth";
+        });
+      }
     });
     super.initState();
   }
+
   // void checkConnectivity() async {
   //   internet_result = (await Connectivity().checkConnectivity()) as Connectivity;
   //   // print(internet_result.toString());
   // }
-    @override
+  @override
   void dispose() {
     connection!.cancel();
     super.dispose();
@@ -95,28 +98,45 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(
             decoration: BoxDecoration(
                 gradient: LinearGradient(
-              colors: isoffline? [bgRed, bgDark]:[bgLight, bgDark],
+              colors: isoffline ? [bgRed, bgDark] : [bgLight, bgDark],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
             )),
           ),
-          Scaffold( 
+          Scaffold(
             backgroundColor: Colors.transparent,
-                // ignore: prefer_const_constructors
-                drawer: Drawer (
-                  backgroundColor:  Color.fromARGB(132, 0, 0, 0),
-                  width: 200,
-        // ignore: prefer_const_constructors
-        child: SafeArea(
-          child:
-          Column(
-            children: [
-              SizedBox(height: 10,),
-              Text ("This is a drawer"),
-            ],
-          ) 
-          ) ,
-    ),
+            // ignore: prefer_const_constructors
+            drawer: Drawer(
+              backgroundColor: Color.fromARGB(132, 0, 0, 0),
+              width: 200,
+              // ignore: prefer_const_constructors
+              child: SafeArea(
+                  child: Column(
+                children: [
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text("This is a drawer"),
+                  GestureDetector(
+                      onTap: () async {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return const OnBoard();
+                        }));
+                      },
+                      child: Container(
+                        child: Text('Review onboarding'),
+                        width: 100,
+                        height: 40,
+                        decoration: BoxDecoration(
+                          color: Colors.blue,
+                        ),
+                      )),
+
+                ],
+              )),
+
+            ),
             appBar: AppBar(
               automaticallyImplyLeading: false,
               elevation: 0.0,
@@ -153,8 +173,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 ),
               ],
             ),
-            body: 
-            Column(
+            body: Column(
               children: [
                 SizedBox(
                   height: 340.0,
@@ -198,13 +217,13 @@ class _HomeScreenState extends State<HomeScreen> {
               ],
             ),
           ),
-              //           GestureDetector(
-              // child:Container(
-              //   height:MediaQuery.of(context).size.height,
-              //   color:Colors.red,
-              //   width:12,
-              // )
-              // )
+          //           GestureDetector(
+          // child:Container(
+          //   height:MediaQuery.of(context).size.height,
+          //   color:Colors.red,
+          //   width:12,
+          // )
+          // )
         ],
       ),
     );
