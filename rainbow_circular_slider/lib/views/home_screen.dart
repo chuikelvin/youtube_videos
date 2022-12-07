@@ -9,6 +9,7 @@ import 'package:rainbow_circular_slider/card.dart';
 import 'package:rainbow_circular_slider/constants.dart';
 import 'package:rainbow_circular_slider/views/circular_slider.dart';
 
+import 'add_device.dart';
 import 'onboard.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -118,7 +119,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                   Text("This is a drawer"),
                   GestureDetector(
-                      onTap: () async {
+                      onTap: () {
                         Navigator.push(context,
                             MaterialPageRoute(builder: (context) {
                           return const OnBoard();
@@ -163,12 +164,18 @@ class _HomeScreenState extends State<HomeScreen> {
               actions: [
                 IconButton(
                   onPressed: () {
-                    liked = !liked;
-                    setState(() {});
+                    // liked = !liked;
+                    // setState(() {});
+
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) {
+                          return const AddDevice();
+                        }));
+
                   },
                   color: liked ? Colors.red : Colors.white,
                   icon: Icon(
-                    liked ? CupertinoIcons.heart_fill : CupertinoIcons.heart,
+                    liked ? CupertinoIcons.add : CupertinoIcons.add,
                   ),
                 ),
               ],
