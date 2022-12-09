@@ -1,4 +1,7 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_blue/flutter_blue.dart';
+
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/container.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -6,18 +9,46 @@ import 'package:flutter/src/widgets/framework.dart';
 class AddDevice extends StatefulWidget {
   const AddDevice({Key? key}) : super(key: key);
 
+  // final List<BluetoothDevice> devicesList = new List<BluetoothDevice>();
+
+  // _addDeviceTolist(final BluetoothDevice device) {
+  //   if (!widget.devicesList.contains(device)) {
+  //     setState((){
+  //       widget.devicesList.add(device)
+  //     })
+  //   }
+  // }
+
   @override
   State<AddDevice> createState() => _AddDeviceState();
 }
 
 class _AddDeviceState extends State<AddDevice> {
+  FlutterBlue flutterBlue = FlutterBlue.instance;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        automaticallyImplyLeading: false,
-        title: Center(child: Text('add a device')),
-      ),
+          automaticallyImplyLeading: false,
+          title: Center(child: Text('add a device')),
+          actions: [
+            IconButton(
+                onPressed: () {
+                  // Start scanning
+                  flutterBlue.startScan(timeout: Duration(seconds: 4));
+
+                  var subscription = flutterBlue.scanResults.listen((results) {
+                    // do something with scan results
+                    for (ScanResult r in results) {
+                      print('${r.device.name} found! rssi: ${r.rssi}');
+                    }
+                  });
+
+                  flutterBlue.stopScan();
+                },
+                icon: Icon(CupertinoIcons.add))
+          ]),
       body: Container(
           // color:Colors.red,
           child: ListView.builder(

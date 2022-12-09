@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:math' as math;
 // import 'package:connectivity/connectivity.dart';
 import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -90,16 +91,39 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Future<bool> showExitPopup() async {
+      return await showDialog(
+            //show confirm dialogue
+            //the return value will be from "Yes" or "No" options
+            context: context,
+            builder: (context) => CupertinoAlertDialog(
+              title: Text('Exit App'),
+              content: Text('Do you want to exit the App?'),
+              actions: [
+                CupertinoDialogAction(
+                  onPressed: () => Navigator.of(context).pop(false),
+                  //return false when click on "NO"
+                  child: Text('No'),
+                ),
+                CupertinoDialogAction(
+                  onPressed: () => Navigator.of(context).pop(true),
+                  //return true when click on "Yes"
+                  child: Text('Yes'),
+                ),
+              ],
+            ),
+          ) ??
+          false; //if showDialouge had returned null, then return false
+    }
+
     return WillPopScope(
-      onWillPop: () async {
-        return false;
-      },
+      onWillPop: showExitPopup,
       child: Stack(
         children: [
           Container(
             decoration: BoxDecoration(
                 gradient: LinearGradient(
-              colors: isoffline ? [bgRed, bgDark] : [bgLight, bgDark],
+              colors: isoffline ? [bgRed, bgDark, bgDark] : [bgLight, bgDark, bgDark],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
             )),
@@ -133,10 +157,8 @@ class _HomeScreenState extends State<HomeScreen> {
                           color: Colors.blue,
                         ),
                       )),
-
                 ],
               )),
-
             ),
             appBar: AppBar(
               automaticallyImplyLeading: false,
@@ -163,15 +185,20 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               actions: [
                 IconButton(
-                  onPressed: () {
+                  onPressed: () async {
                     // liked = !liked;
                     // setState(() {});
+                    if (await Permission.bluetooth.request().isGranted) {
+                      // Either the permission was already granted before or the user just granted it.
+                      print("Location Permission is granted");
+                    } else {
+                      print("Location Permission is denied.");
+                    }
 
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) {
-                          return const AddDevice();
-                        }));
-
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) {
+                      return const AddDevice();
+                    }));
                   },
                   color: liked ? Colors.red : Colors.white,
                   icon: Icon(

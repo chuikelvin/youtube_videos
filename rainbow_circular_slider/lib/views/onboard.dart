@@ -57,58 +57,13 @@ class _OnBoardState extends State<OnBoard> {
                 children: <Widget>[
                   Container(
                     color: Colors.pink,
-                    child: Container(
-                      child: ListView.builder(
-                          itemCount: 12,
-                          scrollDirection: Axis.vertical,
-                          itemBuilder: (context, index) {
-                            return Container(
-                              width: 12,
-                              height: 130,
-                              color: Colors.amber,
-                              margin: EdgeInsets.all(10),
-                            );
-                          }),
-                    ),
                   ),
                   Container(
                     color: Colors.cyan,
                   ),
                   Container(
                       color: Colors.deepPurple,
-                      child: Stack(children: [
-                        Container(
-                            height: (MediaQuery.of(context).size.height),
-                            width: (MediaQuery.of(context).size.width),
-                            child: Center(
-                                child: Image.asset(
-                              'assets/images/reducer.PNG',
-                              height: (MediaQuery.of(context).size.height),
-                              width: (MediaQuery.of(context).size.width),
-                              scale: 0.4,
-                            ))),
-                        Center(
-                          child: GestureDetector(
-                              onTap: () async {
-                                SharedPreferences prefs =
-                                    await SharedPreferences.getInstance();
-                                prefs.setInt('onBoard', 0);
-                                Navigator.push(context,
-                                    MaterialPageRoute(builder: (context) {
-                                  return const HomeScreen();
-                                }));
-                              },
-                              child: Stack(children: [
-                                Container(
-                                    width: 200,
-                                    height: 100,
-                                    color: Colors.yellow,
-                                    child: Center(
-                                      child: Text("done"),
-                                    ))
-                              ])),
-                        )
-                      ])),
+                      ),
                 ],
               ),
               Container(
