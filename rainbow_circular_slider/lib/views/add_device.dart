@@ -26,6 +26,8 @@ class AddDevice extends StatefulWidget {
 class _AddDeviceState extends State<AddDevice> {
   FlutterBlue flutterBlue = FlutterBlue.instance;
 
+  final bluetoothDevices = [];
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,8 +43,17 @@ class _AddDeviceState extends State<AddDevice> {
                   var subscription = flutterBlue.scanResults.listen((results) {
                     // do something with scan results
                     for (ScanResult r in results) {
-                      print('${r.device.name} found! rssi: ${r.rssi}');
+                      if (r.device.name != "" &&
+                          !bluetoothDevices.contains(r.device)) {
+                        setState(() {
+                          bluetoothDevices.add(r.device);
+                        });
+                      }
+
+                      // )
+                      // print('${r.device.name} found! rssi: ${r.rssi}');
                     }
+                    print(bluetoothDevices);
                   });
 
                   flutterBlue.stopScan();
@@ -52,40 +63,52 @@ class _AddDeviceState extends State<AddDevice> {
       body: Container(
           // color:Colors.red,
           child: ListView.builder(
-              itemCount: 3,
+              itemCount: bluetoothDevices.length,
               itemBuilder: ((context, index) {
-                return Center(
-                  child: Container(
-                      width: MediaQuery.of(context).size.width - 40,
-                      // height: 80,
-                      margin: EdgeInsets.symmetric(vertical: 10),
-                      padding: EdgeInsets.symmetric(vertical: 10),
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                            color: Color.fromARGB(255, 138, 138, 138),
-                            width: 1.0),
-                        borderRadius: BorderRadius.circular(12),
-                        color: index % 2 == 0
-                            ? Color.fromARGB(66, 212, 212, 212)
-                            : Color.fromARGB(66, 208, 157, 85),
-                      ),
-                      child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                          children: [
-                            Image.asset(
-                              'assets/images/espressif.png',
-                              // height: (MediaQuery.of(context).size.height),
-                              // width: (MediaQuery.of(context).size.width),
-                              scale: 0.8,
-                            ),
-                            Text(
-                              "hello world",
-                              // textAlign:Alignment.center
-                            )
-                          ],
+                return GestureDetector(
+                  onTap: () async {
+                    try {
+                      await bluetoothDevices[index].connect();
+                    } catch (e) {
+                      // if (e.code != 'already_connected') {
+                      throw e;
+                      // }
+                    }
+                  },
+                  child: Center(
+                    child: Container(
+                        width: MediaQuery.of(context).size.width - 40,
+                        // height: 80,
+                        margin: EdgeInsets.symmetric(vertical: 10),
+                        padding: EdgeInsets.symmetric(vertical: 10),
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                              color: Color.fromARGB(255, 138, 138, 138),
+                              width: 1.0),
+                          borderRadius: BorderRadius.circular(12),
+                          color: index % 2 == 0
+                              ? Color.fromARGB(66, 212, 212, 212)
+                              : Color.fromARGB(66, 208, 157, 85),
                         ),
-                      )),
+                        child: Center(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Image.asset(
+                                'assets/images/espressif.png',
+                                // height: (MediaQuery.of(context).size.height),
+                                // width: (MediaQuery.of(context).size.width),
+                                scale: 0.8,
+                              ),
+                              Text(
+                                ' ${bluetoothDevices[index].name}',
+                                // "hello world",
+                                // textAlign:Alignment.center
+                              )
+                            ],
+                          ),
+                        )),
+                  ),
                 );
               }))),
     );
