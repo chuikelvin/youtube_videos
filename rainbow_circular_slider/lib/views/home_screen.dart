@@ -123,7 +123,9 @@ class _HomeScreenState extends State<HomeScreen> {
           Container(
             decoration: BoxDecoration(
                 gradient: LinearGradient(
-              colors: isoffline ? [bgRed, bgDark, bgDark] : [bgLight, bgDark, bgDark],
+              colors: isoffline
+                  ? [bgRed, bgDark, bgDark]
+                  : [bgLight, bgDark, bgDark],
               begin: Alignment.topCenter,
               end: Alignment.bottomCenter,
             )),
@@ -304,23 +306,31 @@ class _VolumeRow extends StatelessWidget {
   }
 }
 
-class _Card extends StatelessWidget {
+class _Card extends StatefulWidget {
   final CardModel cardModel;
 
   const _Card({Key? key, required this.cardModel}) : super(key: key);
 
   @override
+  State<_Card> createState() => _CardState();
+}
+
+class _CardState extends State<_Card> {
+  var width = 0.0;
+  var widthdata = 0.0;
+  @override
   Widget build(BuildContext context) {
-    Color color = cardModel.active ? Colors.white : Colors.white24;
+    Color color = widget.cardModel.active ? Colors.white : Colors.white24;
     return Column(
       children: [
         Container(
+          clipBehavior: Clip.antiAliasWithSaveLayer,
           height: 150.0,
           width: 150.0,
           decoration: BoxDecoration(
             color: bgDark,
             borderRadius: BorderRadius.circular(25.0),
-            boxShadow: cardModel.active
+            boxShadow: widget.cardModel.active
                 ? [
                     const BoxShadow(
                       color: Color.fromARGB(255, 72, 72, 72),
@@ -329,34 +339,73 @@ class _Card extends StatelessWidget {
                   ]
                 : [],
           ),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                cardModel.title,
-                style: TextStyle(
-                  fontSize: 16.0,
-                  fontWeight: FontWeight.w500,
+          child: Stack(alignment: AlignmentDirectional.center, children: [
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  widget.cardModel.title,
+                  style: TextStyle(
+                    fontSize: 16.0,
+                    fontWeight: FontWeight.w500,
+                    color: color,
+                  ),
+                ),
+                const SizedBox(height: 10.0),
+                Icon(
+                  widget.cardModel.icon,
+                  size: 40.0,
                   color: color,
                 ),
-              ),
-              const SizedBox(height: 10.0),
-              Icon(
-                cardModel.icon,
-                size: 40.0,
-                color: color,
-              ),
-              const SizedBox(height: 10.0),
-              Text(
-                cardModel.active ? 'A C T I V E' : 'I N A C T I V E',
-                style: TextStyle(
-                  fontSize: 12.0,
-                  fontWeight: FontWeight.w500,
-                  color: color,
+                const SizedBox(height: 10.0),
+                Text(
+                  widget.cardModel.active ? 'A C T I V E' : 'I N A C T I V E',
+                  style: TextStyle(
+                    fontSize: 12.0,
+                    fontWeight: FontWeight.w500,
+                    color: color,
+                  ),
                 ),
-              ),
-            ],
-          ),
+              ],
+            ),
+            GestureDetector(
+                onDoubleTap: () {
+                  if (width <= 0) {
+                    setState(() {
+                      width = 150;
+                    });
+                  } else {
+                    setState(() {
+                      width = 0;
+                    });
+                  }
+                },
+                onHorizontalDragUpdate: ((details) {
+                  setState(() {
+                    widthdata = width += details.delta.dx;
+                    if (widthdata >= 0 && widthdata < 150) {
+                      width = widthdata;
+                    } else if (widthdata < 0) {
+                      widthdata = width = 0;
+                    } else {
+                      widthdata = width = 150;
+                    }
+                  });
+                  print(width);
+                }),
+                child: Container(
+                  color: Color.fromARGB(0, 33, 149, 243),
+                  child: Align(
+                    alignment: Alignment.bottomLeft,
+                    child: Container(
+                      // height: 0.2*150,
+                      width: width,
+                      // alignment: Alignment.bottomLeft,
+                      color: Color.fromARGB(77, 175, 145, 76),
+                    ),
+                  ),
+                ))
+          ]),
         ),
       ],
     );

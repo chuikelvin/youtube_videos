@@ -56,14 +56,14 @@ class _CircularSliderState extends State<CircularSlider> {
 
   double currentAngle = 0;
 
-  double startAngle = toRadian(90);
+  double startAngle = toRadian(90 + 45);
 
   double totalAngle = toRadian(360);
 
   var my_address = "";
   var address = "";
 
-  var mainSocket =RawDatagramSocket.bind(InternetAddress.anyIPv4, 4210);
+  var mainSocket = RawDatagramSocket.bind(InternetAddress.anyIPv4, 4210);
 
   @override
   void initState() {
@@ -72,94 +72,91 @@ class _CircularSliderState extends State<CircularSlider> {
   }
 
   void startudp() async {
-  
-  for (var interface in await NetworkInterface.list()) {
-    // print('== Interface: ${interface.name} ==');
-    for (var addr in interface.addresses) {
-      my_address = addr.address;
-    }
-  }
-  print(my_address);
-
-  var index = my_address.lastIndexOf('.');
-  address = my_address.substring(0, index + 1);
-  address += "255";
-  print(address);
-
-  // RawDatagramSocket.bind(InternetAddress.anyIPv4, 4210)
-      mainSocket.then((RawDatagramSocket socket) {
-    socket.broadcastEnabled = true;
-    int port = 4210;
-  try {
-    // for (int i = 0; i <3;i++){
-    socket.send('marco'.codeUnits,
-        InternetAddress(address), port);
-        // }
-    
-  } catch (e) {
-    startudp();
-  }
-    // print('Sending from ${socket.address.address}:${socket.port}');
-    // printIps();
-
-                socket.listen((RawSocketEvent e){
-      Datagram? d = socket.receive();
-      if (d == null) return;
-      if (d.address.address != my_address){
-
-      String message = new String.fromCharCodes(d.data);
-      print('Datagram from ${d.address.address}:${d.port}: ${message.trim()}');
-
-      socket.send(message.codeUnits, d.address, d.port);
+    for (var interface in await NetworkInterface.list()) {
+      // print('== Interface: ${interface.name} ==');
+      for (var addr in interface.addresses) {
+        my_address = addr.address;
       }
+    }
+    print(my_address);
+
+    var index = my_address.lastIndexOf('.');
+    address = my_address.substring(0, index + 1);
+    address += "255";
+    print(address);
+
+    // RawDatagramSocket.bind(InternetAddress.anyIPv4, 4210)
+    mainSocket.then((RawDatagramSocket socket) {
+      socket.broadcastEnabled = true;
+      int port = 4210;
+      try {
+        // for (int i = 0; i <3;i++){
+        socket.send('marco'.codeUnits, InternetAddress(address), port);
+        // }
+
+      } catch (e) {
+        startudp();
+      }
+      // print('Sending from ${socket.address.address}:${socket.port}');
+      // printIps();
+
+      socket.listen((RawSocketEvent e) {
+        Datagram? d = socket.receive();
+        if (d == null) return;
+        if (d.address.address != my_address) {
+          String message = new String.fromCharCodes(d.data);
+          print(
+              'Datagram from ${d.address.address}:${d.port}: ${message.trim()}');
+
+          socket.send(message.codeUnits, d.address, d.port);
+        }
+      });
     });
-  });
   }
 
   void printIps() async {
     mainSocket.then((RawDatagramSocket socket) {
       socket.broadcastEnabled = true;
-    int port = 4210;
-        for (int i = 0; i <3;i++){
-    socket.send('marco'.codeUnits,
-        InternetAddress(address), port);
-        }
-    print("will work");
+      int port = 4210;
+      for (int i = 0; i < 3; i++) {
+        socket.send('marco'.codeUnits, InternetAddress(address), port);
+      }
+      print("will work");
     });
-  // var my_address = "";
-  // var address = "";
-  // for (var interface in await NetworkInterface.list()) {
-  //   // print('== Interface: ${interface.name} ==');
-  //   for (var addr in interface.addresses) {
-  //     my_address = addr.address;
-  //   }
-  // }
-  // print(my_address);
+    // var my_address = "";
+    // var address = "";
+    // for (var interface in await NetworkInterface.list()) {
+    //   // print('== Interface: ${interface.name} ==');
+    //   for (var addr in interface.addresses) {
+    //     my_address = addr.address;
+    //   }
+    // }
+    // print(my_address);
 
-  // var index = my_address.lastIndexOf('.');
-  // address = my_address.substring(0, index + 1);
-  // address += "255";
-  // print(address);
+    // var index = my_address.lastIndexOf('.');
+    // address = my_address.substring(0, index + 1);
+    // address += "255";
+    // print(address);
 
-  // RawDatagramSocket.bind(InternetAddress.anyIPv4, 4210)
-  //     .then((RawDatagramSocket socket) {
-  //   // print('Sending from ${socket.address.address}:${socket.port}');
-  //   // printIps();
-  //   socket.broadcastEnabled = true;
-  //   int port = 4210;
-  //   for (int i = 0; i <3;i++){
-  //   socket.send('marco'.codeUnits,
-  //       InternetAddress(address), port);
-  //       }
-  // });
-}
+    // RawDatagramSocket.bind(InternetAddress.anyIPv4, 4210)
+    //     .then((RawDatagramSocket socket) {
+    //   // print('Sending from ${socket.address.address}:${socket.port}');
+    //   // printIps();
+    //   socket.broadcastEnabled = true;
+    //   int port = 4210;
+    //   for (int i = 0; i <3;i++){
+    //   socket.send('marco'.codeUnits,
+    //       InternetAddress(address), port);
+    //       }
+    // });
+  }
 
   @override
   Widget build(BuildContext context) {
     Size screenSize = MediaQuery.of(context).size;
     Size canvasSize = Size(screenSize.width, widget.canvheight);
     Offset center = canvasSize.center(Offset.zero);
-    Offset knobPos = toPolar(center - Offset(strokeWidth,strokeWidth),
+    Offset knobPos = toPolar(center - Offset(strokeWidth, strokeWidth),
         currentAngle + startAngle, radius);
 
     return Stack(
@@ -249,6 +246,8 @@ class SliderPainter extends CustomPainter {
     canvas.drawArc(
       rect,
       startAngle,
+      // 2,
+      // toRadian(270),
       math.pi * 2,
       false,
       Paint()
@@ -256,7 +255,7 @@ class SliderPainter extends CustomPainter {
         ..strokeWidth = strokeWidth,
     );
 
-    canvas.drawArc(rect, startAngle, currentAngle, false, rainbowPaint);
+    canvas.drawArc(rect, startAngle, toRadian(270), false, rainbowPaint);
   }
 
   @override
@@ -271,33 +270,28 @@ class _Knob extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double detector_size = 80;
-    return Stack(
-      children: [
-        Transform.translate(
-          offset: Offset(-25, -25),
-          child: Container(
-            height: detector_size,
-           width: detector_size,
+    return Stack(children: [
+      Transform.translate(
+        offset: Offset(-25, -25),
+        child: Container(
+          height: detector_size,
+          width: detector_size,
           decoration: BoxDecoration(
-                shape: BoxShape.circle,
-                ),
+            shape: BoxShape.circle,
           ),
         ),
-        
-        
-         Container(
-          height: 30,
-          width: 30,
-          decoration: BoxDecoration(
-              color: const Color(0xff0b1623),
-              shape: BoxShape.circle,
-              border: Border.all(color: Colors.white, width: 3.0)),
-        )
-        ]
-        );
-      
-        // height: 60,
-        // width: 60,
-       
+      ),
+      Container(
+        height: 30,
+        width: 30,
+        decoration: BoxDecoration(
+            color: const Color(0xff0b1623),
+            shape: BoxShape.circle,
+            border: Border.all(color: Colors.white, width: 3.0)),
+      )
+    ]);
+
+    // height: 60,
+    // width: 60,
   }
 }

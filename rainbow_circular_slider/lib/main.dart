@@ -3,6 +3,7 @@ import 'package:rainbow_circular_slider/views/home_screen.dart';
 import 'package:rainbow_circular_slider/views/onboard.dart';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:get/get.dart';
 
 Future printIps() async {
   var my_address = "";
@@ -59,7 +60,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData.dark(),

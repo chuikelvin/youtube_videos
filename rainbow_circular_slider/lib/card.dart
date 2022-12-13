@@ -12,4 +12,5 @@ List cards = [
   CardModel('Bedroom', CupertinoIcons.bed_double, true),
   CardModel('Kitchen', CupertinoIcons.tuningfork, false),
   CardModel('Hallway', CupertinoIcons.heart_fill, false),
+  CardModel('Front porch', CupertinoIcons.lightbulb, false)
 ];
